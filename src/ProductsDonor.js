@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from './services/api'
 import { Card, Button, Badge, Row, Col } from 'react-bootstrap'
 import useAuth from './hooks/useAuth';
+import getStatus from './utils/status';
 
 export default function ProductsDonor() {
     const [user, setUser] = useAuth();
@@ -10,42 +11,16 @@ export default function ProductsDonor() {
     const [products, setProducts] = useState([]);
 
     function handleStatus(status) {
-        let newStatus = {
-            badge: '',
-            text: ''
-        }
-        if (status === 'OPEN') {
-            newStatus.badge = 'success'
-            newStatus.text = 'Aberto'
-            newStatus.open = true
-        }
-        if (status === 'IN_PROGRESS') {
-            newStatus.badge = 'warning'
-            newStatus.text = 'Em progresso'
-            newStatus.pending = true
-        }
-        if (status === 'FINISHED') {
-            newStatus.badge = 'danger'
-            newStatus.text = 'Fechado'
-        }
-        return newStatus
+        return getStatus(status)
     }
 
-    function handleAccept(product) {
+    function handleAccept(product, status) {
 
         const payload = {
-            status: 'FINISHED',
+            status,
         }
 
         api.patch(`/products/${product?.product_id}/`, payload).then(res => {
-            setProducts([
-                ...products,
-                products.map(p => {
-                    if (p.product_id === product.product_id) {
-                        p = res.data
-                    }
-                })
-            ])
             window.history.go('/meus-produtos')
             console.log({ res })
         }).catch(err => {
@@ -55,7 +30,7 @@ export default function ProductsDonor() {
 
     useEffect(() => {
         async function loadProducts() {
-            const res = await api.get(`/products/?user_id_donor=${user?.user_id}`, {
+            const res = await api.get(`/products/${user?.user_id}/donations`, {
                 headers: {
                     "Content-type": "application/json",
                 }
@@ -76,11 +51,10 @@ export default function ProductsDonor() {
             <Row xs={1} md={2} className="g-4">
                 {products.map((product, idx) => {
                     const status = handleStatus(product?.status)
-                    console.log({ status })
                     return (
                         <Col>
                             <Card>
-                                <Card.Img variant="top" src={product.image} />
+                                <Card.Img variant="top" src={product?.image} />
                                 <Card.Body>
                                     <Card.Title>{product?.title}</Card.Title>
                                     <Card.Text>
@@ -91,9 +65,12 @@ export default function ProductsDonor() {
                                     <div style={{ display: 'flex', alignContent: 'center', alignItems: 'center', justifyContent: 'space-between' }}>
 
                                         <Badge bg={status.badge}>{status.text}</Badge>
-                                        {status?.pending && <Button variant="light" onClick={() => handleAccept(product)}>
+                                        {status?.pending && (user?.user_id !== product?.user_id_recipient) && <Button variant="light" onClick={() => handleAccept(product, 'Finalizado')}>
                                             Aceitar
                                         </Button>}
+                                        {status?.pending && (
+                                            <Button variant="light" onClick={() => handleAccept(product, 'Cancelado')}>Cancelar</Button>
+                                        )}
                                     </div>
                                 </Card.Footer>
                             </Card>

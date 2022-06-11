@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from './services/api'
 import { Card, Button, Badge, Row, Col } from 'react-bootstrap'
 import useAuth from './hooks/useAuth';
+import getStatus from './utils/status';
 
 export default function ProductList() {
     const [user, setUser] = useAuth();
@@ -10,42 +11,18 @@ export default function ProductList() {
     const [products, setProducts] = useState([]);
 
     function handleStatus(status) {
-        let newStatus = {
-            badge: '',
-            text: ''
-        }
-        if (status === 'OPEN') {
-            newStatus.badge = 'success'
-            newStatus.text = 'Aberto'
-            newStatus.open = true
-        }
-        if (status === 'IN_PROGRESS') {
-            newStatus.badge = 'warning'
-            newStatus.text = 'Em progresso'
-        }
-        if (status === 'FINISHED') {
-            newStatus.badge = 'danger'
-            newStatus.text = 'Fechado'
-        }
-        return newStatus
+        return getStatus(status)
     }
 
     function handleGetProduct(product) {
 
         const payload = {
-            status: 'IN_PROGRESS',
+            status: 'Em andamento',
             user_id_recipient: user?.user_id
         }
 
         api.patch(`/products/${product?.product_id}/`, payload).then(res => {
-            setProducts([
-                ...products,
-                products.map(p => {
-                    if (p.product_id === product.product_id) {
-                        p = res.data
-                    }
-                })
-            ])
+            window.history.go('/listagem-produtos')
             console.log({ res })
         }).catch(err => {
             console.log({ err })
@@ -54,7 +31,7 @@ export default function ProductList() {
 
     useEffect(() => {
         async function loadProducts() {
-            const res = await api.get('/products/', {
+            const res = await api.get(`/products/${user?.user_id}/pendents/`, {
                 headers: {
                     "Content-type": "application/json",
                 }
@@ -73,12 +50,13 @@ export default function ProductList() {
             alignItems: 'center'
         }}>
             <Row xs={1} md={2} className="g-4">
-                {products.filter(product => product.user_id_donor !== user.user_id).map((product, idx) => {
+                {products.map((product, idx) => {
                     const status = handleStatus(product?.status)
+                    console.log(product)
                     return (
                         <Col>
                             <Card>
-                                <Card.Img variant="top" src={product.image} />
+                                <Card.Img height={300} width={300} variant="top" src={product.image} />
                                 <Card.Body>
                                     <Card.Title>{product?.title}</Card.Title>
                                     <Card.Text>

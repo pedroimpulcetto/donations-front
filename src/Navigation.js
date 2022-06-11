@@ -14,13 +14,13 @@ export class Navigation extends Component {
                             Home
                         </NavLink>
                         <NavLink className="d-inline p-2 bg-warning text-dark" to="/listagem-produtos">
-                            Listagem de Produtos
+                            Itens para Doação
                         </NavLink>
                         <NavLink className="d-inline p-2 bg-warning text-dark" to="/cadastrar-produtos">
-                            Cadastrar Produto
+                            Cadastrar Item para Doação
                         </NavLink>
                         <NavLink className="d-inline p-2 bg-warning text-dark" to="/meus-produtos">
-                            Meus Produtos
+                            Minha Doações
                         </NavLink>
                     </Nav>
                 </Navbar.Collapse>

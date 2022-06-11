@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from './services/api'
 import { Card, ListGroup, Form, Button, Dropdown, DropdownButton, Spinner, Badge, Nav, Row, Col } from 'react-bootstrap'
 import useAuth from './hooks/useAuth';
+import getStatus from './utils/status';
 
 export default function Product() {
     const [user, setUser] = useAuth();
@@ -24,24 +25,7 @@ export default function Product() {
     }
 
     function handleStatus(status) {
-        let newStatus = {
-            badge: '',
-            text: ''
-        }
-        if (status === 'OPEN') {
-            newStatus.badge = 'success'
-            newStatus.text = 'Aberto'
-            newStatus.open = true
-        }
-        if (status === 'IN_PROGRESS') {
-            newStatus.badge = 'warning'
-            newStatus.text = 'Em progresso'
-        }
-        if (status === 'FINISHED') {
-            newStatus.badge = 'danger'
-            newStatus.text = 'Fechado'
-        }
-        return newStatus
+        return getStatus(status)
     }
 
     function handleSubmit() {
@@ -73,7 +57,7 @@ export default function Product() {
     function handleGetProduct(product) {
 
         const payload = {
-            status: 'IN_PROGRESS',
+            status: 'Em andamento',
             user_id_recipient: user?.user_id
         }
 

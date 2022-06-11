@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 import api from './services/api'
 import { Card, ListGroup, Form, Button, Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
-import { handleLogin } from './auth/login';
 import useAuth from './hooks/useAuth';
+import Logo from './logo';
 
 export default function Login() {
     const [user, setUser] = useAuth();
@@ -61,6 +61,7 @@ export default function Login() {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
+                <Logo />
                 <h2>Login</h2>
                 <h5 style={{ color: 'gray' }}>Coloque seu dados para fazer o login</h5>
             </div>

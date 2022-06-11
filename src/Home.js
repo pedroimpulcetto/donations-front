@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 export class Home extends Component {
 
     render() {
-        return(
+        return (
             <div className="mt-5 d-flex justify-content-left">
-                Home
+                Aqui você poderá doar o que não usar mais ou "pegar" o que você precisa.
             </div>
         )
     }
