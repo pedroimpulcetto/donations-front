@@ -42,12 +42,7 @@ export default function ProductsDonor() {
 
 
     return (
-        <div className="mt-5 d-flex justify-content-left" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
+        <div className="mt-5 d-flex justify-content-left" >
             <Row xs={1} md={2} className="g-4">
                 {products.map((product, idx) => {
                     const status = handleStatus(product?.status)

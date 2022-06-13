@@ -43,20 +43,14 @@ export default function ProductList() {
 
 
     return (
-        <div className="mt-5 d-flex justify-content-left" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
+        <div className="mt-5 d-flex justify-content-left">
             <Row xs={1} md={2} className="g-4">
                 {products.map((product, idx) => {
                     const status = handleStatus(product?.status)
-                    console.log(product)
                     return (
                         <Col>
                             <Card>
-                                <Card.Img height={300} width={300} variant="top" src={product.image} />
+                                <Card.Img variant="top" src={product.image} />
                                 <Card.Body>
                                     <Card.Title>{product?.title}</Card.Title>
                                     <Card.Text>
